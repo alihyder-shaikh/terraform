@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+    name: backend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -15,7 +15,8 @@ spec:
       nodeSelector:
         workload: backend
       containers:
-        - name: backend
-          image: us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/backend:v2
-          ports:
-            - containerPort: 3000
+      - name: backend
+        image: us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/backend:v3
+        ports:
+        - containerPort: 3000
+
