@@ -5,7 +5,7 @@ app.get("/", (req, res) => {
   const tenant = req.headers["x-tenant-id"] || "unknown";
 
   res.json({
-    message: "Hello from backend",
+    message: "Helloooo from backend",
     tenant: tenant
   });
 });
