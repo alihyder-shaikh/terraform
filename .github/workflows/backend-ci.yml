@@ -21,7 +21,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+      - name: Debug variables
+        run: |
+          echo "PROJECT: ${{ vars.GCP_PROJECT_ID }}"
+          echo "SA: ${{ vars.GCP_SERVICE_ACCOUNT }}"
+          echo "WIF: ${{ vars.WIF_PROVIDER }}"
       - name: Auth to GCP
         uses: google-github-actions/auth@v3
         with:
