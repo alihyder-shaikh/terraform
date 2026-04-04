@@ -20,3 +20,18 @@ module "gke" {
 
   master_cidr = var.master_cidr
 }
+
+module "gce" {
+  source = "../../modules/gce"
+
+  name       = "exalate-bastion"
+  region     = var.region
+  subnetwork = module.network.subnet_id
+}
+
+module "firewall" {
+  source = "../../modules/firewall"
+
+  name    = "exalate"
+  network = module.network.vpc_name
+}

@@ -59,7 +59,12 @@ resource "google_container_node_pool" "primary" {
     disk_size_gb = 20
     disk_type    = "pd-standard"
 
-    preemptible = true
+    preemptible = false
+
+    labels = {
+      workload = "backend"
+    }
+
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
