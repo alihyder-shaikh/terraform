@@ -1,0 +1,46 @@
+name: api-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'gcp-infra/exalate/api/**'
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  REGION: us-central1
+  GAR_HOST: us-central1-docker.pkg.dev
+  REPOSITORY: backend-repo
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Auth to GCP
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker $GAR_HOST --quiet
+
+      - name: Build & Push API
+        uses: docker/build-push-action@v6
+        with:
+          context: gcp-infra/exalate/api
+          file: gcp-infra/exalate/api/Dockerfile
+          push: true
+          tags: |
+            ${{ env.GAR_HOST }}/${{ vars.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/api:latest
+            ${{ env.GAR_HOST }}/${{ vars.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/api:${{ github.sha }}
