@@ -3,3 +3,12 @@ resources:
   - api/k8/service.yaml
   - backend/k8/deployment.yaml
   - backend/k8/service.yaml
+
+commonLabels:
+  project: exalate
+
+images:
+  - name: us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/backend
+    newTag: latest
+  - name: us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/api
+    newTag: latest
