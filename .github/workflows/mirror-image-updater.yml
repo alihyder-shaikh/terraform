@@ -1,0 +1,35 @@
+name: Mirror ArgoCD Image Updater
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/589047239228/locations/global/workloadIdentityPools/github/providers/github-exalate
+          service_account: gha-artifact-writer@exalate-project-492211.iam.gserviceaccount.com
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Pull from quay
+        run: |
+          docker pull quay.io/argoproj/argocd-image-updater:v0.13.0
+
+      - name: Tag for GAR
+        run: |
+          docker tag quay.io/argoproj/argocd-image-updater:v0.13.0 \
+          us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0
+
+      - name: Push to GAR
+        run: |
+          docker push us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0
