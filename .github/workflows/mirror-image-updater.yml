@@ -24,14 +24,14 @@ jobs:
       - name: Configure Docker for GAR
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      # 🔹 Pull from GHCR instead of quay
-      - name: Pull ArgoCD Image Updater
+      # ✅ Pull from GCR (no quay, no GHCR)
+      - name: Pull Image
         run: |
-          docker pull ghcr.io/argoproj/argocd-image-updater:v0.13.0
+          docker pull gcr.io/argoproj/argocd-image-updater:v0.13.0
 
       - name: Tag for GAR
         run: |
-          docker tag ghcr.io/argoproj/argocd-image-updater:v0.13.0 \
+          docker tag gcr.io/argoproj/argocd-image-updater:v0.13.0 \
           us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0
 
       - name: Push to GAR
