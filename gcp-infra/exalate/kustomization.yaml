@@ -1,0 +1,5 @@
+resources:
+  - api/k8/deployment.yaml
+  - api/k8/service.yaml
+  - backend/k8/deployment.yaml
+  - backend/k8/service.yaml
