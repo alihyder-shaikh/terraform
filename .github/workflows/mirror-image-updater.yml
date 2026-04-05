@@ -1,4 +1,4 @@
-name: Build ArgoCD Image Updater
+name: Build ArgoCD Image Updater (to GAR)
 
 on:
   workflow_dispatch:
@@ -12,28 +12,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source directly from GitHub
+      # 1) Checkout the correct repo (argoproj-labs)
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
-          repository: argoproj/argocd-image-updater
+          repository: argoproj-labs/argocd-image-updater
           ref: v0.13.0
+          fetch-depth: 1
 
+      # 2) Auth to GCP via Workload Identity
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: projects/589047239228/locations/global/workloadIdentityPools/github/providers/github-exalate
           service_account: gha-artifact-writer@exalate-project-492211.iam.gserviceaccount.com
 
+      # 3) Install gcloud
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker
+      # 4) Allow Docker to push to GAR
+      - name: Configure Docker for GAR
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
+      # 5) Build image from source
       - name: Build image
         run: |
-          docker build -t us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0 .
+          docker build \
+            -t us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0 \
+            .
 
+      # 6) Push to GAR
       - name: Push image
         run: |
-          docker push us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0
+          docker push \
+            us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0
