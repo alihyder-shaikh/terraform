@@ -1,4 +1,4 @@
-name: Build ArgoCD Image Updater (no external registry)
+name: Build ArgoCD Image Updater
 
 on:
   workflow_dispatch:
@@ -12,16 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout source directly from GitHub
         uses: actions/checkout@v4
+        with:
+          repository: argoproj/argocd-image-updater
+          ref: v0.13.0
 
-      - name: Clone argocd-image-updater source
-        run: |
-          git clone https://github.com/argoproj/argocd-image-updater.git
-          cd argocd-image-updater
-          git checkout v0.13.0
-
-      - name: Authenticate to GCP (Workload Identity)
+      - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: projects/589047239228/locations/global/workloadIdentityPools/github/providers/github-exalate
@@ -30,14 +27,13 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker for GAR
+      - name: Configure Docker
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Build image locally
+      - name: Build image
         run: |
-          cd argocd-image-updater
           docker build -t us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0 .
 
-      - name: Push to GAR
+      - name: Push image
         run: |
           docker push us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/argocd-image-updater:v0.13.0
