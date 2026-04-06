@@ -1,0 +1,158 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd-image-updater.argoproj.io/api.update-strategy: latest
+    argocd-image-updater.argoproj.io/backend.update-strategy: latest
+    argocd-image-updater.argoproj.io/image-list: |
+      backend=us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/backend,
+      api=us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/api
+    argocd-image-updater.argoproj.io/write-back-method: git
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{"argocd-image-updater.argoproj.io/api.update-strategy":"latest","argocd-image-updater.argoproj.io/backend.update-strategy":"latest","argocd-image-updater.argoproj.io/image-list":"backend=us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/backend,\napi=us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/api\n","argocd-image-updater.argoproj.io/write-back-method":"git"},"name":"exalate","namespace":"argocd"},"spec":{"destination":{"namespace":"default","server":"https://kubernetes.default.svc"},"project":"default","source":{"path":"gcp-infra/exalate","repoURL":"https://github.com/alihyder-shaikh/terraform.git","targetRevision":"HEAD"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=true","ApplyOutOfSyncOnly=true"]}}}
+  creationTimestamp: "2026-04-05T12:01:40Z"
+  generation: 138
+  name: exalate
+  namespace: argocd
+  resourceVersion: "1775406415487455024"
+  uid: c57e4f45-3ebf-4412-b28d-5dca54d886fd
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: gcp-infra/exalate
+    repoURL: https://github.com/alihyder-shaikh/terraform.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2026-04-05T13:34:03Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2026-04-05T12:17:21Z"
+    deployedAt: "2026-04-05T12:17:26Z"
+    id: 0
+    initiatedBy: {}
+    revision: ffa4c28c7d8a66d2cdfc75f65fb48beba5e491f2
+    source:
+      path: gcp-infra/exalate
+      repoURL: https://github.com/alihyder-shaikh/terraform.git
+      targetRevision: HEAD
+  - deployStartedAt: "2026-04-05T13:17:57Z"
+    deployedAt: "2026-04-05T13:17:58Z"
+    id: 1
+    initiatedBy:
+      username: admin
+    revision: 37192dde084bd2a9eb1796a86a7c3ccad3eddb12
+    source:
+      path: gcp-infra/exalate
+      repoURL: https://github.com/alihyder-shaikh/terraform.git
+      targetRevision: HEAD
+  - deployStartedAt: "2026-04-05T13:28:12Z"
+    deployedAt: "2026-04-05T13:28:12Z"
+    id: 2
+    initiatedBy:
+      username: admin
+    revision: 69ef1797c3e251dcd1b0dbcaaf50806e4e5ce8f8
+    source:
+      path: gcp-infra/exalate
+      repoURL: https://github.com/alihyder-shaikh/terraform.git
+      targetRevision: HEAD
+  operationState:
+    finishedAt: "2026-04-05T13:33:37Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        username: admin
+      retry: {}
+      sync:
+        resources:
+        - kind: Service
+          name: api
+          namespace: default
+        - group: apps
+          kind: Deployment
+          name: api
+          namespace: default
+        revision: f038e0f9d94ff834d65d76cd35a1460918d6ede8
+        source:
+          path: gcp-infra/exalate
+          repoURL: https://github.com/alihyder-shaikh/terraform.git
+          targetRevision: HEAD
+        syncOptions:
+        - CreateNamespace=true
+        - ApplyOutOfSyncOnly=true
+        - Replace=true
+        syncStrategy:
+          hook: {}
+    phase: Succeeded
+    startedAt: "2026-04-05T13:33:33Z"
+    syncResult:
+      resources:
+      - group: apps
+        hookPhase: Running
+        images:
+        - us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/api:latest
+        kind: Deployment
+        message: deployment.apps/api replaced
+        name: api
+        namespace: default
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      revision: f038e0f9d94ff834d65d76cd35a1460918d6ede8
+      source:
+        path: gcp-infra/exalate
+        repoURL: https://github.com/alihyder-shaikh/terraform.git
+        targetRevision: HEAD
+  reconciledAt: "2026-04-05T16:26:55Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: Service
+    name: api
+    namespace: default
+    status: Synced
+    version: v1
+  - kind: Service
+    name: backend
+    namespace: default
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: api
+    namespace: default
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: backend
+    namespace: default
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Kustomize
+  summary:
+    images:
+    - us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/api:latest
+    - us-central1-docker.pkg.dev/exalate-project-492211/backend-repo/backend:latest
+  sync:
+    comparedTo:
+      destination:
+        namespace: default
+        server: https://kubernetes.default.svc
+      source:
+        path: gcp-infra/exalate
+        repoURL: https://github.com/alihyder-shaikh/terraform.git
+        targetRevision: HEAD
+    revision: 9149be79d16b5bcf12fa3a5e060998794a809565
+    status: Synced
