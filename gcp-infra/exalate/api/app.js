@@ -3,6 +3,11 @@ const axios = require("axios");
 
 const app = express();
 
+/* ✅ HEALTH ENDPOINT (must be FIRST) */
+app.get("/health", (req, res) => {
+	  res.status(200).send("OK");
+});
+
 app.get("/", async (req, res) => {
 	  const tenant = req.headers["x-tenant-id"];
 
